@@ -1,0 +1,44 @@
+SOURCE_CLIENT=client.cpp
+SOURCE_CLIENT_H=client.h
+SOURCE_SERVER=server.cpp
+SOURCE_SERVER_H=server.h
+SOURCE_INIPARSER=IniParser.cpp
+SOURCE_INIPARSER_H=IniParser.h
+SOURCE_DRIVER=driver.cpp
+SOURCE_BASECONVERT_H=baseToDecimal.h
+SOURCE_RUNMODE_H=runMode.h
+DRIVER=driver
+CLIENT=Client
+SERVER=Server
+DEPENDENCIES=depends
+CONVERSION=baseConvert
+CONVERSTIONDEP=baseConvertHeader
+
+
+CC=g++
+STD=-std=c++11
+PTHREAD=-pthread
+
+all: $(DRIVER)
+
+$(DRIVER): $(CLIENT) $(SERVER) $(CONVERSION)
+	$(CC) $(SOURCE_DRIVER) -o $(DRIVER) $(STD) client.o server.o IniParser.o
+
+$(CLIENT): $(DEPENDENCIES)
+	$(CC) -c $(SOURCE_CLIENT) $(PTHREAD) $(STD)
+
+$(SERVER): $(DEPENDENCIES)
+	$(CC) -c $(SOURCE_SERVER) $(PTHREAD) $(STD)
+
+$(CONVERSION): $(CONVERSIONDEP)
+	$(CC) -c $(SOURCE_INIPARSER) $(STD)
+
+$(CONVERSIONDEP):
+	$(CC) $(SOURCE_INIPARSER_H) $(STD)
+
+$(DEPENDENCIES): 
+	$(CC) $(SOURCE_RUNMODE_H) $(SOURCE_CLIENT_H) $(SOURCE_SERVER_H) $(STD)
+
+clean: 
+	rm -f $(DRIVER) *.h.gch *.o
+
